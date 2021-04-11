@@ -32,6 +32,20 @@ def menuP():
             except:
                 print('No eligio un automata correcto')
 
+        elif opcion == '3':
+            print('Las gramaticas disponibles son: ')
+            listaglc.MostrarGramaticas()
+            eleccion = input('Ingrese el nombre de la gramatica de la cual desea su automata equivalente...')
+            automata = listaglc.DevolverADP(eleccion)
+            automata.AutomataEquivalente()
+            input('Presione Enter para continuar...')
+
+            print('Ocurrio un error inesperado')
+
+
+
+
+
 
 
 

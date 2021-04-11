@@ -78,3 +78,47 @@ class Gramatica(object):
             if noterminal.estado == separado[0]:
                 noterminal.transiciones.append(separado[1])
                 print('Transicion agregada')
+
+    def AutomataEquivalente(self):
+        alfabeto = self.cadenaterminales
+        simbolospila = self.cadenaterminales + ',' + self.cadenanotermianles + ',#'
+        file = open('Carga/automataPila.dot', "w")
+        file.write("digraph grafica{" + os.linesep)
+        file.write("rankdir=LR;" + os.linesep)
+        file.write("rank=same;" + os.linesep)
+        file.write("f [shape = doublecircle];" + os.linesep)
+        file.write("q [margin = 1];" + os.linesep)
+        file.write('"Inicio" [shape = plaintext];' + os.linesep)
+        file.write('"Inicio" -> i;' + os.linesep)
+        file.write('i -> p [label = "$,$;#"]' + os.linesep)
+        file.write('p -> q [label = "$,$;' + self.inicial + '"]' + os.linesep)
+        file.write('q -> f [label = "$,#;$"]' + os.linesep)
+        for est in self.noterminales:
+            for trans in est.transiciones:
+                transicion = '"$,' + est.estado + ';' + trans.replace(' ', '') + '"'
+                file.write(transicion + ' [shape=none];')
+                file.write('q -> ' + transicion + ' [dir = none]' + os.linesep)
+                file.write(transicion + '-> q' + os.linesep)
+        for terminal in self.terminales:
+            transicion = '"' + terminal + ',' + terminal + '; $"'
+            file.write(transicion + ' [shape=none];')
+            file.write('q -> ' + transicion + ' [dir = none]' + os.linesep)
+            file.write(transicion + '-> q' + os.linesep)
+        file.write(os.linesep)
+        file.write('tabla[shape=plaintext,fontsize=12, label=<')
+        file.write('<TABLE BORDER="0">')
+        file.write('<TR><TD>Alfabeto: { ' + alfabeto + ' }</TD></TR>')
+        file.write('<TR><TD>Alfabeto de pila: { ' + simbolospila + ' }</TD></TR>')
+        file.write('<TR><TD>Estados: { i,p,q,f }</TD></TR>')
+        file.write('<TR><TD>Estado inicial: { i }</TD></TR>')
+        file.write('<TR><TD>Estado de aceptacion: { f }</TD></TR>')
+        file.write('</TABLE>')
+        file.write('>];')
+
+        file.write(os.linesep)
+        file.write('Titulo [shape=plaintext,fontsize=20, label="Nombre: ' + self.nombre + '"]')
+
+        file.write('}')
+        file.close()
+        subprocess.call('dot -Tpdf Carga/automataPila.dot -o automataPila.pdf')
+        os.system('automataPila.pdf')
