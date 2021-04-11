@@ -94,3 +94,9 @@ class ListaGramatica(object):
                 else:
                     print('|', transicion)
                 no += 1
+
+    def DevolverADP(self, nombre):
+        for adp in self.gramatica:
+            if adp.nombre == nombre:
+                return adp
+        return False

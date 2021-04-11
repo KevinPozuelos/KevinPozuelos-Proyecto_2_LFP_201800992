@@ -9,15 +9,31 @@ def MenuPrincipal():
     print(' '.ljust(9, ' '), '5) Reporte de tabla')
     print(' '.ljust(9, ' '), '6) Salir del programa')
     opcion = input('Ingrese su opcion: '.rjust(29, ' '))
+    return opcion
 
-    if opcion == '1':
-        ruta = input('Ingrese el nombre de su archivo con su extension .glc...')
-        print(ruta)
-        listaglc.CargarGramaticas(ruta)
+def menuP():
+
+    while True:
+        opcion = MenuPrincipal()
+        if opcion == '1':
+            ruta = input('Ingrese el nombre de su archivo con su extension .glc...')
+            print(ruta)
+            listaglc.CargarGramaticas(ruta)
+
+        elif opcion == '2':
+            print('Las gramaticas disponibles son: ')
+            listaglc.MostrarGramaticas()
+            eleccion = input('Ingrese el nombre de la gramatica que desea visualizar...')
+            automata = listaglc.DevolverADP(eleccion)
+            try:
+                listaglc.ImprimirAutomata(automata)
+                input('Presione Enter para continuar...')
+                os.system('cls')
+            except:
+                print('No eligio un automata correcto')
 
 
 
-        return True
 
 
 

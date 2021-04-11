@@ -1,3 +1,3 @@
-from  Menu import *
+from Menu import *
 if __name__ == '__main__':
-    menu = MenuPrincipal()
+    menu = menuP()
