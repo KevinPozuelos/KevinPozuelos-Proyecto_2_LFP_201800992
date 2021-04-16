@@ -54,7 +54,9 @@ class Gramatica(object):
         produccion = separado[1].split(' ')
 
         if self.ExisteNoTermianal(separado[0]):
+
             for analizada in produccion:
+
                 if self.ExisteNoTermianal(analizada) or self.ExisteEnTerminales(analizada):
                     '''Seguimos'''
                 else:

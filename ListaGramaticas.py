@@ -85,14 +85,16 @@ class ListaGramatica(object):
         print('No terminales:', EnCreacion.cadenanotermianles)
         print('Terminales: ', EnCreacion.cadenaterminales)
         print('No terminal inicial:', EnCreacion.inicial)
-        print('Transiciones:')
+        print('Producciones:')
+        n = 0
         for estado in EnCreacion.noterminales:
+            n += 1
             no = 1
             for transicion in estado.transiciones:
                 if no == 1:
-                    print(estado.estado, '>', transicion)
+                    print("producion "+str(n)+': '+estado.estado, '->', transicion)
                 else:
-                    print('|', transicion)
+                    print("\t"+"\t"+"\t"+"\t"+'|', transicion)
                 no += 1
 
     def DevolverADP(self, nombre):
