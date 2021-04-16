@@ -1,0 +1,32 @@
+Grm1
+S,A,B,C;a,b,z;S
+S->A
+A->a A a
+A->B
+B->b B b
+B->C
+C->z C
+C->z
+*
+Gramatica2
+A,B,C,D;0,1;A
+A->1 B
+A->0 C
+B->1 A
+B->0 D
+C->1 D
+C->0
+D->1 C
+C->0 A
+D->0 B
+*
+Grm3
+S,K,Y,ZZ;1,2,3;S
+S->K
+K->1 K 1
+K->Y
+Y->2 Y 2
+Y->Z Z
+ZZ->3 ZZ
+ZZ->3
+*
