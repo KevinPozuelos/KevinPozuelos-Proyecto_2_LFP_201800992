@@ -1,0 +1,33 @@
+digraph grafica{
+rankdir=LR;
+rank=same;
+f [shape = doublecircle];
+q [margin = 1];
+"Inicio" [shape = plaintext];
+"Inicio" -> i;
+i -> p [label = "$,$;#"]
+p -> q [label = "$,$;S"]
+q -> f [label = "$,#;$"]
+"$,S;A" [shape=none];q -> "$,S;A" [dir = none]
+"$,S;A"-> q
+"$,A;aAa" [shape=none];q -> "$,A;aAa" [dir = none]
+"$,A;aAa"-> q
+"$,A;B" [shape=none];q -> "$,A;B" [dir = none]
+"$,A;B"-> q
+"$,B;bBb" [shape=none];q -> "$,B;bBb" [dir = none]
+"$,B;bBb"-> q
+"$,B;C" [shape=none];q -> "$,B;C" [dir = none]
+"$,B;C"-> q
+"$,C;zC" [shape=none];q -> "$,C;zC" [dir = none]
+"$,C;zC"-> q
+"$,C;z" [shape=none];q -> "$,C;z" [dir = none]
+"$,C;z"-> q
+"a,a; $" [shape=none];q -> "a,a; $" [dir = none]
+"a,a; $"-> q
+"b,b; $" [shape=none];q -> "b,b; $" [dir = none]
+"b,b; $"-> q
+"z,z; $" [shape=none];q -> "z,z; $" [dir = none]
+"z,z; $"-> q
+
+tabla[shape=plaintext,fontsize=12, label=<<TABLE BORDER="0"><TR><TD>Alfabeto: { a,b,z }</TD></TR><TR><TD>Alfabeto de pila: { a,b,z,S,A,B,C,# }</TD></TR><TR><TD>Estados: { i,p,q,f }</TD></TR><TR><TD>Estado inicial: { i }</TD></TR><TR><TD>Estado de aceptacion: { f }</TD></TR></TABLE>>];
+Titulo [shape=plaintext,fontsize=20, label="Nombre: Grm1"]}
