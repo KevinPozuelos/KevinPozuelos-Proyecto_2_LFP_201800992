@@ -1,3 +1,5 @@
+from builtins import filter
+
 from NoTerminal import *
 import os
 import subprocess
@@ -37,6 +39,7 @@ class Gramatica(object):
         elif self.ExisteEnTerminales(parteAlfabeto):
             print(parteAlfabeto, 'ya es parte de los terminales...')
             print('')
+
         else:
             self.terminales.append(parteAlfabeto)
 
@@ -118,9 +121,26 @@ class Gramatica(object):
         file.write('>];')
 
         file.write(os.linesep)
-        file.write('Titulo [shape=plaintext,fontsize=20, label="Nombre: ' + self.nombre + '"]')
+        file.write('Titulo [shape=plaintext,fontsize=20, label="Nombre: AP_' + self.nombre + '"]')
 
         file.write('}')
         file.close()
         subprocess.call('dot -Tpdf Carga/automataPila.dot -o automataPila.pdf')
-        os.system('automataPila.pdf')
+        os.system("dot -Tpng -o graph-g.png Carga/automataPila.dot")
+        os.system('AP.html')
+        fileAP = open('Carga/automata.ap', "w")
+        fileAP.write(str(self.nombre)+'\n')
+        fileAP.write(alfabeto+'\n')
+        fileAP.write(alfabeto+',#'+'\n')
+        fileAP.write('I,P,Q,F'+'\n')
+        fileAP.write('I'+'\n')
+        fileAP.write('F'+'\n')
+        fileAP.write('P,$,$;Q,#' + '\n')
+        fileAP.write('I,' + self.inicial + ',$;P,' + self.inicial + '\n')
+        for est in self.noterminales:
+            for trans in est.transiciones:
+                transicion = '$,' + est.estado + ';' + trans.replace(' ', '')
+                fileAP.write('P,'+ transicion[0]+ transicion[1] + transicion[2] + transicion[3] + 'Q,' + transicion[4]+'\n')
+
+        fileAP.write('Q,$,#;F,$'+'\n')
+        fileAP.write('*')

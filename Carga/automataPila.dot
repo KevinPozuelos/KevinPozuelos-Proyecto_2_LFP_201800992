@@ -30,4 +30,4 @@ q -> f [label = "$,#;$"]
 "z,z; $"-> q
 
 tabla[shape=plaintext,fontsize=12, label=<<TABLE BORDER="0"><TR><TD>Alfabeto: { a,b,z }</TD></TR><TR><TD>Alfabeto de pila: { a,b,z,S,A,B,C,# }</TD></TR><TR><TD>Estados: { i,p,q,f }</TD></TR><TR><TD>Estado inicial: { i }</TD></TR><TR><TD>Estado de aceptacion: { f }</TD></TR></TABLE>>];
-Titulo [shape=plaintext,fontsize=20, label="Nombre: Grm1"]}
+Titulo [shape=plaintext,fontsize=20, label="Nombre: AP_Grm1"]}

@@ -1,6 +1,8 @@
 from ListaGramaticas import *
 listaglc = ListaGramatica()
+import time
 def MenuPrincipal():
+
     print('INGRESE EL NUMERO DE LA ACCION QUE DESEA REALIZAR'.center(70, ' '))
     print(' '.ljust(9, ' '), '1) Cargar archivo')
     print(' '.ljust(9, ' '), '2) Mostrar informacion general de la gramatica')
@@ -42,10 +44,28 @@ def menuP():
 
             print('Ocurrio un error inesperado')
 
+def conteo(numero):
+    num = int(numero)
+    for i in range(num):
+        numer = i + 1
+        print(str(numer).center(100, ' '))
+        time.sleep(1)
 
 
-
-
+def PantallaInicial():
+    print('╔═╗╦═╗╔═╗╔╦╗╔═╗╔╦╗╦╔═╗╔═╗╔═╗  ╦  ╦╔╗ ╦═╗╔═╗╔═╗  ╔╦╗╔═╗╦    ╔═╗╔═╗╔╗╔╔╦╗╔═╗═╗ ╦╔╦╗╔═╗'.center(60, ' '))
+    print('║ ╦╠╦╝╠═╣║║║╠═╣ ║ ║║  ╠═╣╚═╗  ║  ║╠╩╗╠╦╝║╣ ╚═╗   ║║║╣ ║    ║  ║ ║║║║ ║ ║╣ ╔╩╦╝ ║ ║ ║'.center(60, ' '))
+    print('╚═╝╩╚═╩ ╩╩ ╩╩ ╩ ╩ ╩╚═╝╩ ╩╚═╝  ╩═╝╩╚═╝╩╚═╚═╝╚═╝  ═╩╝╚═╝╩═╝  ╚═╝╚═╝╝╚╝ ╩ ╚═╝╩ ╚═ ╩ ╚═╝'.center(60, ' '))
+    print(' ╔╗  ╦ ╔═╗ ╔╗╔ ╦ ╦ ╔═╗ ╔╗╔ ╦ ╔═╗ ╔╦╗ ╔═╗ '.center(60, ' '))
+    print(' ╠╩╗ ║ ║╣  ║║║ ║ ║ ║╣  ║║║ ║ ║ ║  ║║ ║ ║ '.center(60, ' '))
+    print(' ╚═╝ ╩ ╚═╝ ╝╚╝ ╚═╝ ╚═╝ ╝╚╝ ╩ ╚═╝ ═╩╝ ╚═╝ '.center(60, ' '))
+    print('Kevin Raul Pozuelos Estrada'.center(100, ' '))
+    print('CARNET: 201800992'.center(100, ' '))
+    conteo(5)
+    print('╔╦╗╔═╗╔╗╔╦ ╦  ╔═╗╦═╗╦╔╗╔╔═╗╦╔═╗╔═╗╦  '.center(70, ' '))
+    print('║║║║╣ ║║║║ ║  ╠═╝╠╦╝║║║║║  ║╠═╝╠═╣║  '.center(70, ' '))
+    print('╩ ╩╚═╝╝╚╝╚═╝  ╩  ╩╚═╩╝╚╝╚═╝╩╩  ╩ ╩╩═╝'.center(70, ' '))
+    os.system('cls')
 
 
 

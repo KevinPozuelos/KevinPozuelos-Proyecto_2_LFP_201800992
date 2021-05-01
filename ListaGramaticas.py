@@ -3,7 +3,7 @@ from Gramatica import *
 class ListaGramatica(object):
     def __init__(self):
         self.gramatica = []
-
+        self.error = []
     def ExisteGramatica(self, AFD):
         for afd in self.gramatica:
             if afd.nombre == AFD:
@@ -74,6 +74,8 @@ class ListaGramatica(object):
 
                 else:
                     print('No es una gramatica libre del contexto, no sera agregada')
+                    self.error.append(['Nombre de la gramatica:  ' + str(EnCreacion.nombre), 'error, no se cargo no es una gramatica de tipo 2 o Libre del contexto'])
+                    ListaGramatica.reporteError(self)
                 noL = 0
             else:
                 EnCreacion.AgregarTransicion(linea)
@@ -102,3 +104,43 @@ class ListaGramatica(object):
             if adp.nombre == nombre:
                 return adp
         return False
+
+    def reporteError(self):
+        contenido = ''
+        htmFile = open("Reporte_Gramaticas" + ".html", "w", encoding='utf8')
+        htmFile.write("""<!DOCTYPE HTML PUBLIC"
+                   <html>
+                   <head>
+                       <title>Reporte de errores</title>
+                    <meta charset="utf-8">
+                 <meta name="viewport" content="width=device-width, initial-scale=1">
+                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>    
+                   </head>
+                   <body>
+                   <div class="container">
+                 <h2>Reporte de errores</h2>
+                 <p>Lista de errores</p>            
+                 <table class="table">
+                   <thead>
+                     <tr>
+                      <th>nombre</th>
+                       <th>razon</th>
+                       
+                     </tr>
+                   </thead>
+                   """)
+        for i in range(len(self.error)):
+            contenido += (" <tbody>"
+                          "<td>" + str(self.error[i][0]) + "</td>"
+                          "<td>" + str(self.error[i][1]) + "</td>"
+                          
+                          "</tbody>")
+        htmFile.write(contenido)
+        htmFile.write("""
+                 </table>
+            </div>
+                </body>
+                </html>""")
+        htmFile.close

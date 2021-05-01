@@ -110,3 +110,43 @@ class AutomataPila(object):
             print(
                 'No es posible agregar esta transicion, algun estado o el simbolo no estan registrados en el automata')
             return False
+
+    def InsertarAPila(self, simbolo):
+        if simbolo != '$' and self.ExisteEnAlfabeto(simbolo):
+            self.pila.append(simbolo)
+        else:
+            '''No se hace nada'''
+
+    def ExtraePila(self, simbolo):
+        if simbolo == '$':
+            '''No se hace nada'''
+            return True
+        else:
+            if self.pila.pop() == simbolo:
+                return True
+            else:
+                return False
+
+    def ValidarCadenaConReporte(self, cadena):
+        self.pila = []
+        file = open('Carga/ValidacionEnUnaPasada.dot', "w")
+        file.write("digraph grafica{" + os.linesep)
+        file.write("rankdir=LR;" + os.linesep)
+        file.write('tabla[shape=plaintext,fontsize=12, label=<')
+        file.write('<TABLE BORDER="1">')
+        file.write('<TR><TD>Iteracion</TD><TD>Pila</TD><TD>Entrada</TD><TD>Transicion</TD></TR>')
+        tamano = len(cadena)
+
+        iteracion = 0
+        nombreEstado = self.inicial
+        actual = self.SacarEstado(nombreEstado)
+        transicionActual = actual.DevolverTransicionCon('$')
+        try:
+            self.pila.append(transicionActual.simboloInserta)
+            file.write(
+                '<TR><TD>0</TD><TD>' + self.CadenaDePila() + '</TD><TD></TD><TD>' + nombreEstado + transicionActual.ImprimirTransicion() + '</TD></TR>')
+            nombreEstado = transicionActual.destino
+            actual = self.SacarEstado(nombreEstado)
+        except:
+            print('Error')
+            return False
