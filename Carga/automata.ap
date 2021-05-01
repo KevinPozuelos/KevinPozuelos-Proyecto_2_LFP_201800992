@@ -1,0 +1,17 @@
+Grm1
+a,b,z
+a,b,z,#
+I,P,Q,F
+I
+F
+P,$,$;Q,#
+I,S,$;P,S
+P,$,S;Q,A
+P,$,A;Q,a
+P,$,A;Q,B
+P,$,B;Q,b
+P,$,B;Q,C
+P,$,C;Q,z
+P,$,C;Q,z
+Q,$,#;F,$
+*
