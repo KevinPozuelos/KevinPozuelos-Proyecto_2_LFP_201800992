@@ -1,0 +1,3 @@
+digraph grafica{
+rankdir=LR;
+tabla[shape=plaintext,fontsize=12, label=<<TABLE BORDER="1"><TR><TD>Iteracion</TD><TD>Pila</TD><TD>Entrada</TD><TD>Transicion</TD></TR><TR><TD>0</TD><TD>#</TD><TD></TD><TD>S0,$,$;S1,#</TD></TR><TR><TD>1</TD><TD>#x</TD><TD>x</TD><TD>S1,x,$;S1,x</TD></TR><TR><TD>2</TD><TD>#x</TD><TD>xy</TD><TD>S1,y,$;S2,$</TD></TR><TR><TD>3</TD><TD>#x</TD><TD>xyy</TD><TD>S2,y,$;S2,$</TD></TR><TR><TD>4</TD><TD>#x</TD><TD>xyy</TD><TD>Invalida</TD></TR></TABLE>>];}
