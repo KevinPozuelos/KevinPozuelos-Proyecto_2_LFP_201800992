@@ -111,6 +111,36 @@ class AutomataPila(object):
                 'No es posible agregar esta transicion, algun estado o el simbolo no estan registrados en el automata')
             return False
 
+    def GenerarReporte(self):
+        file = open('Carga/automataPila.dot', "w")
+        file.write("digraph grafica{" + os.linesep)
+        file.write("rankdir=LR;" + os.linesep)
+        file.write(self.aceptacion + " [shape = doublecircle];" + os.linesep)
+        file.write('"Inicio" [shape = plaintext];' + os.linesep)
+        file.write('"Inicio" -> ' + self.inicial + os.linesep)
+        for est in self.estados:
+            for trans in est.transiciones:
+                transicion = str(trans.simboloLee) + ',' + str(trans.simboloExtrae) + ';' + str(trans.simboloInserta)
+                file.write(est.estado + ' -> ' + trans.destino + ' [label = "{0}"]'.format(transicion) + os.linesep)
+        file.write(os.linesep)
+        file.write('tabla[shape=plaintext,fontsize=12, label=<')
+        file.write('<TABLE BORDER="0">')
+        file.write('<TR><TD>Alfabeto: { ' + self.cadenaAlfabeto + ' }</TD></TR>')
+        file.write('<TR><TD>Alfabeto de pila: { ' + self.cadenaSimbolos + ' }</TD></TR>')
+        file.write('<TR><TD>Estados: { ' + self.cadenaEstados + ' }</TD></TR>')
+        file.write('<TR><TD>Estado inicial: { ' + self.inicial + ' }</TD></TR>')
+        file.write('<TR><TD>Estado de aceptacion: { ' + self.aceptacion + ' }</TD></TR>')
+        file.write('</TABLE>')
+        file.write('>];')
+
+        file.write(os.linesep)
+        file.write('Titulo [shape=plaintext,fontsize=20, label="Nombre: ' + self.nombre + '"]')
+
+        file.write('}')
+        file.close()
+        subprocess.call('dot -Tpdf Carga/automataPila.dot -o automataPila.pdf')
+        os.system('automataPila.pdf')
+
     def InsertarAPila(self, simbolo):
         if simbolo != '$' and self.ExisteEnAlfabeto(simbolo):
             self.pila.append(simbolo)
@@ -126,6 +156,227 @@ class AutomataPila(object):
                 return True
             else:
                 return False
+
+    def ComprobarUltima(self, estado):
+        transicionActual = estado.DevolverTransicionCon('$')
+        if self.ExtraePila(transicionActual.simboloExtrae):
+            self.InsertarAPila(transicionActual.simboloInserta)
+            if len(self.pila) == 0 and transicionActual.destino == self.aceptacion:
+                return True
+            else:
+                return False
+
+    def ComprobarUltimaConReporte(self, estado, cadena):
+        transicionActual = estado.DevolverTransicionCon('$')
+        if self.ExtraePila(transicionActual.simboloExtrae):
+            self.InsertarAPila(transicionActual.simboloInserta)
+            self.ReportePorPaso(estado.estado, transicionActual, cadena, '1')
+            if len(self.pila) == 0 and transicionActual.destino == self.aceptacion:
+                self.ReportePorPaso(transicionActual.destino, '', cadena, '2')
+                return True
+            else:
+                return False
+
+    def ValidarCadena(self, cadena):
+        self.pila = []
+        tamano = len(cadena)
+
+        iteracion = 0
+        nombreEstado = self.inicial
+        actual = self.SacarEstado(nombreEstado)
+        transicionActual = actual.DevolverTransicionCon('$')
+        try:
+            self.pila.append(transicionActual.simboloInserta)
+            nombreEstado = transicionActual.destino
+            actual = self.SacarEstado(nombreEstado)
+        except:
+            print('Error')
+            return False
+
+        for caracter in cadena:
+            iteracion += 1
+            if tamano == iteracion:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                        if self.ComprobarUltima(actual):
+                            print('Cadena Valida'.upper())
+                            print()
+                            return True
+                        else:
+                            print('Cadena invalida'.upper())
+                            print()
+                            return False
+                    else:
+                        print('Cadena invalida'.upper())
+                        print()
+                        return False
+                except:
+                    print('Cadena invalida'.upper())
+                    print()
+                    return False
+            else:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                    else:
+                        print('Cadena invalida'.upper())
+                        print()
+                        return False
+                except:
+                    print('Cadena invalida, caracter no pertenece al automata')
+                    print()
+                    return False
+
+    def ImprimirCadena(self, cadena):
+        self.pila = []
+        tamano = len(cadena)
+
+        iteracion = 0
+        nombreEstado = self.inicial
+        actual = self.SacarEstado(nombreEstado)
+        transicionActual = actual.DevolverTransicionCon('$')
+        try:
+            self.pila.append(transicionActual.simboloInserta)
+            print(nombreEstado + transicionActual.ImprimirTransicion())
+            nombreEstado = transicionActual.destino
+            actual = self.SacarEstado(nombreEstado)
+        except:
+            print('Error')
+            return False
+
+        for caracter in cadena:
+            iteracion += 1
+            if tamano == iteracion:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        print(nombreEstado + transicionActual.ImprimirTransicion())
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                        if self.ComprobarUltimaImprimiendo(actual):
+                            print()
+                            return True
+                        else:
+                            print('Cadena invalida'.upper())
+                            print()
+                            return False
+                    else:
+                        print('Cadena invalida'.upper())
+                        print()
+                        return False
+                except:
+                    print('Cadena invalida'.upper())
+                    print()
+                    return False
+            else:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        print(nombreEstado + transicionActual.ImprimirTransicion())
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                    else:
+                        print('Cadena invalida'.upper())
+                        print()
+                        return False
+                except:
+                    print('Cadena invalida, caracter no pertenece al automata')
+                    print()
+                    return False
+
+    def ComprobarUltimaImprimiendo(self, estado):
+        transicionActual = estado.DevolverTransicionCon('$')
+        if self.ExtraePila(transicionActual.simboloExtrae):
+            self.InsertarAPila(transicionActual.simboloInserta)
+            print(estado.estado + transicionActual.ImprimirTransicion())
+            if len(self.pila) == 0 and transicionActual.destino == self.aceptacion:
+                return True
+            else:
+                return False
+
+    def ValidarCadenaImprimiendoRuta(self, cadena):
+        self.pila = []
+        tamano = len(cadena)
+
+        iteracion = 0
+        nombreEstado = self.inicial
+        actual = self.SacarEstado(nombreEstado)
+        transicionActual = actual.DevolverTransicionCon('$')
+        try:
+            self.pila.append(transicionActual.simboloInserta)
+            nombreEstado = transicionActual.destino
+            actual = self.SacarEstado(nombreEstado)
+        except:
+            print('Error')
+            return False
+
+        for caracter in cadena:
+            iteracion += 1
+            if tamano == iteracion:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                        if self.ComprobarUltima(actual):
+                            print('Cadena Valida, la ruta de verificacion es:'.upper())
+                            self.ImprimirCadena(cadena)
+                            print()
+                            return True
+                        else:
+                            print('Cadena invalida'.upper())
+                            print()
+                            return False
+                    else:
+                        print('Cadena invalida'.upper())
+                        print()
+                        return False
+                except:
+                    print('Cadena invalida'.upper())
+                    print()
+                    return False
+            else:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                    else:
+                        print('Cadena invalida'.upper())
+                        print()
+                        return False
+                except:
+                    print('Cadena invalida, caracter no pertenece al automata')
+                    print()
+                    return False
+
+    def CadenaDePila(self):
+        cadena = ''
+        for caracter in self.pila:
+            cadena += caracter
+        return cadena
+
+    def TerminarReporteUnaPasada(self, file, iteracion, cadena):
+        file.write(
+            '<TR><TD>' + str(iteracion + 1) + '</TD><TD>' + self.CadenaDePila() +
+            '</TD><TD>' + cadena + '</TD><TD>Invalida</TD></TR>')
+        file.write('</TABLE>')
+        file.write('>];')
+        file.write('}')
+        file.close()
+        subprocess.call('dot -Tpdf Carga/ValidacionEnUnaPasada.dot -o validacion.pdf')
+        os.system('validacion.pdf')
 
     def ValidarCadenaConReporte(self, cadena):
         self.pila = []
@@ -150,3 +401,171 @@ class AutomataPila(object):
         except:
             print('Error')
             return False
+
+        for caracter in cadena:
+            iteracion += 1
+            if tamano == iteracion:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        file.write(
+                            '<TR><TD>' + str(iteracion) + '</TD><TD>' + self.CadenaDePila() + '</TD><TD>' +
+                            cadena[:iteracion] + '</TD><TD>' + nombreEstado + transicionActual.ImprimirTransicion()
+                            + '</TD></TR>')
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                        if self.ComprobarUltima(actual):
+                            transicionActual = actual.DevolverTransicionCon('$')
+                            file.write(
+                                '<TR><TD>' + str(iteracion + 1) + '</TD><TD>' + self.CadenaDePila() + '</TD><TD>' +
+                                cadena + '</TD><TD>' + nombreEstado + transicionActual.ImprimirTransicion()
+                                + '</TD></TR>')
+                            file.write('</TABLE>')
+                            file.write('>];')
+                            file.write('}')
+                            file.close()
+                            subprocess.call('dot -Tpdf Carga/ValidacionEnUnaPasada.dot -o validacion.pdf')
+                            os.system('validacion.pdf')
+                            print()
+                            return True
+                        else:
+                            print('Cadena invalida'.upper())
+                            self.TerminarReporteUnaPasada(file, iteracion, cadena=cadena[:iteracion])
+                            return False
+                    else:
+                        print('Cadena invalida'.upper())
+                        self.TerminarReporteUnaPasada(file, iteracion, cadena=cadena[:iteracion])
+                        print()
+                        return False
+                except:
+                    print('Cadena invalida'.upper())
+                    self.TerminarReporteUnaPasada(file, iteracion, cadena=cadena[:iteracion])
+                    print()
+                    return False
+            else:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        file.write(
+                            '<TR><TD>' + str(iteracion) + '</TD><TD>' + self.CadenaDePila() + '</TD><TD>' +
+                            cadena[:iteracion] + '</TD><TD>' + nombreEstado + transicionActual.ImprimirTransicion()
+                            + '</TD></TR>')
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                    else:
+                        print('Cadena invalida'.upper())
+                        self.TerminarReporteUnaPasada(file, iteracion, cadena=cadena[:iteracion])
+                        print()
+                        return False
+                except:
+                    print('Cadena invalida, caracter no pertenece al automata')
+                    self.TerminarReporteUnaPasada(file, iteracion, cadena=cadena[:iteracion])
+                    print()
+                    return False
+
+    def ReportePorPaso(self, estado, tran, cadena, numero):
+        file = open('Carga/paso.dot', "w")
+        file.write("digraph grafica{" + os.linesep)
+        file.write("rankdir=LR;" + os.linesep)
+        file.write(self.aceptacion + " [shape = doublecircle];" + os.linesep)
+        if numero == '1':
+            '''En proceso'''
+            file.write(estado + " [shape = circle, style = filled, fillcolor = yellow];" + os.linesep)
+        elif numero == '2':
+            file.write('Titulo [shape=plaintext,fontsize=20, label="Cadena Valida"]')
+            file.write(self.aceptacion + " [shape = doublecircle, style = filled, fillcolor = yellow];" + os.linesep)
+        elif numero == '3':
+            file.write('Titulo [shape=plaintext,fontsize=20, label="Cadena invalida"]')
+            file.write(estado + " [shape = circle, style = filled, fillcolor = yellow];" + os.linesep)
+        else:
+            '''naa'''
+
+        file.write('"Inicio" [shape = plaintext];' + os.linesep)
+        file.write('"Inicio" -> ' + self.inicial + os.linesep)
+        for est in self.estados:
+            for trans in est.transiciones:
+                transicion = str(trans.simboloLee) + ',' + str(trans.simboloExtrae) + ';' + str(trans.simboloInserta)
+                if tran == trans:
+                    file.write(est.estado + ' -> ' + trans.destino + ' [label = "{0}", color = red]'.format(transicion) + os.linesep)
+                else:
+                    file.write(est.estado + ' -> ' + trans.destino + ' [label = "{0}"]'.format(transicion) + os.linesep)
+        file.write(os.linesep)
+        file.write('tabla[shape=plaintext,fontsize=12, label=<')
+        file.write('<TABLE BORDER="1">')
+        file.write('<TR><TD>Pila: { ' + self.CadenaDePila() + ' }</TD></TR>')
+        file.write('<TR><TD>Entrada: { ' + cadena + ' }</TD></TR>')
+        file.write('</TABLE>')
+        file.write('>];')
+
+
+
+        file.write(os.linesep)
+
+        file.write('}')
+        file.close()
+        subprocess.call('dot -Tpng Carga/paso.dot -o paso.png')
+        os.system('paso.png')
+        time.sleep(3)
+
+    def ValidarCadenaMostrandoPasos(self, cadena):
+        self.pila = []
+        tamano = len(cadena)
+
+        iteracion = 0
+        nombreEstado = self.inicial
+        actual = self.SacarEstado(nombreEstado)
+        transicionActual = actual.DevolverTransicionCon('$')
+        try:
+            self.pila.append(transicionActual.simboloInserta)
+            self.ReportePorPaso(nombreEstado, transicionActual, '', '1')
+            nombreEstado = transicionActual.destino
+            actual = self.SacarEstado(nombreEstado)
+        except:
+            print('Error')
+            return False
+
+        for caracter in cadena:
+            iteracion += 1
+            if tamano == iteracion:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        self.ReportePorPaso(nombreEstado, transicionActual, cadena[:iteracion], '1')
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                        if self.ComprobarUltimaConReporte(actual, cadena):
+
+                            print()
+                            return True
+                        else:
+                            self.ReportePorPaso(nombreEstado, transicionActual, cadena[:iteracion], '3')
+                            print()
+                            return False
+                    else:
+                        self.ReportePorPaso(nombreEstado, transicionActual, cadena[:iteracion], '3')
+                        print()
+                        return False
+                except:
+                    self.ReportePorPaso(nombreEstado, transicionActual, cadena[:iteracion], '3')
+                    print()
+                    return False
+            else:
+                transicionActual = actual.DevolverTransicionCon(caracter)
+                try:
+                    if self.ExtraePila(transicionActual.simboloExtrae):
+                        self.InsertarAPila(transicionActual.simboloInserta)
+                        self.ReportePorPaso(nombreEstado, transicionActual, cadena[:iteracion], '1')
+                        nombreEstado = transicionActual.destino
+                        actual = self.SacarEstado(nombreEstado)
+                    else:
+                        self.ReportePorPaso(nombreEstado, transicionActual, cadena[:iteracion], '3')
+                        print()
+                        return False
+                except:
+                    self.ReportePorPaso(nombreEstado, transicionActual, cadena[:iteracion], '3')
+                    print()
+                    return False
+

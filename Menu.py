@@ -1,5 +1,7 @@
 from ListaGramaticas import *
+from ListaAP import *
 listaglc = ListaGramatica()
+listaAP = ListaAutomatas()
 import time
 def MenuPrincipal():
 
@@ -41,8 +43,45 @@ def menuP():
             automata = listaglc.DevolverADP(eleccion)
             automata.AutomataEquivalente()
             input('Presione Enter para continuar...')
+        elif opcion == '4':
+            print('Carcando gramaticas a la lista')
+            listaAP.CargarAFDs('Carga/automatas.ap')
+            print('Los automatas disponibles son: ')
+            listaAP.MostrarAPs()
+            eleccion = input('Ingrese el nombre del automata con el que desea evaluar...')
+            automata = listaAP.DevolverADP(eleccion)
+            seguir = True
+            while seguir:
+                print('Si no desea validar mas cadenas ingrese "SALIR"')
+                cadena = input('Ingrese la cadena que desea evaluar con ' + automata.nombre + '...')
+                try:
+                    if cadena == 'SALIR':
+                        seguir = False
+                    else:
+                        automata.ValidarCadenaMostrandoPasos(cadena)
+                except:
+                    print('No eligio un automata correcto')
 
-            print('Ocurrio un error inesperado')
+        elif opcion == '5':
+            listaAP.CargarAFDs('Carga/automatas.ap')
+            print('Los automatas disponibles son: ')
+            listaAP.MostrarAPs()
+            eleccion = input('Ingrese el nombre del automata con el que desea evaluar...')
+            automata = listaAP.DevolverADP(eleccion)
+            seguir = True
+            while seguir:
+                print('Si no desea validar mas cadenas ingrese "SALIR"')
+                cadena = input('Ingrese la cadena que desea evaluar con ' + automata.nombre + '...')
+                try:
+                    if cadena == 'SALIR':
+                        seguir = False
+                    else:
+                        automata.ValidarCadenaConReporte(cadena)
+                except:
+                    print('No eligio un automata correcto')
+
+        else:
+            gestion = False
 
 def conteo(numero):
     num = int(numero)

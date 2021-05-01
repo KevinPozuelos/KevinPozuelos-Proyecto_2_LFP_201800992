@@ -79,3 +79,25 @@ class ListaAutomatas(object):
             else:
                 EnCreacion.AgregarTransicion(linea)
         automatas.close()
+
+    def DevolverADP(self, nombre):
+        for adp in self.automatas:
+            if adp.nombre == nombre:
+                return adp
+        return False
+
+    def ImprimirAutomata(self, EnCreacion):
+        self.Espacios()
+        print('Nombre:', EnCreacion.nombre)
+        print('Estados:')
+        for estado in EnCreacion.estados:
+            print(estado.estado.ljust(10, ' '))
+        print('Alfabeto: ', EnCreacion.alfabeto)
+        print('Simbolos:', EnCreacion.simbolos)
+        print('Estado Inicial:', EnCreacion.inicial)
+        print('Estado de aceptacion:', EnCreacion.aceptacion)
+        print('Transiciones:')
+        for estado in EnCreacion.estados:
+            for transicion in estado.transiciones:
+                print(str(estado.estado) + ',' + str(transicion.simboloLee) + ',' + str(transicion.simboloExtrae) + ';'
+                      + str(transicion.destino) + ',' + str(transicion.simboloInserta))
