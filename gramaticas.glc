@@ -1,4 +1,4 @@
-Grm1
+Grm2
 S,A,B,C;a,b,z;S
 S->A
 A->a A a
@@ -8,7 +8,7 @@ B->C
 C->z C
 C->z
 *
-Gramatica2
+Gramatica1
 A,B,C,D;0,1;A
 A->1 B
 A->0 C
